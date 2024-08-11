@@ -13,14 +13,24 @@ var controller = new Vue({
     methods: {
         datatable() {
             const _this = this;
-            _this.table = $('#datatable').DataTable({
-                ajax: {
-                    url: _this.apiUrl,
-                    type: 'GET',
+            // _this.table = $('#datatable').DataTable({
+            //     ajax: {
+            //         url: _this.apiUrl,
+            //         type: 'GET',
+            //     },
+            //     columns: columns,
+            // }).on('xhr', function () {
+            //     _this.datas = _this.table.ajax.json().data;
+            // });
+            $.ajax({
+                url: apiUrl,
+                method: 'GET',
+                success: function(data) {
+                    _this.datas = data.data;
                 },
-                columns: columns,
-            }).on('xhr', function () {
-                _this.datas = _this.table.ajax.json().data;
+                error: function(error) {
+                    console.log(error);
+                }
             });
         },
         addData() {
@@ -28,16 +38,18 @@ var controller = new Vue({
             this.editStatus = false;
             $('#modal-default').modal();
         },
-        editData(event, row) {
-            this.data = this.datas[row];
+        editData(data, row) {
+            this.data = data;
             this.editStatus = true;
             $('#modal-default').modal();
         },
-        deleteData(event, id) {
+        deleteData(id) {
             if (confirm("Are you sure?")) {
                 $(event.target).parents('tr').remove();
                 axios.post(this.actionUrl + '/' + id, { _method: 'DELETE' }).then(response => {
                     alert('Data has been removed!');
+                    $('#modal-default').modal('hide');
+                    this.datatable();
                 });
             }
         },
@@ -47,7 +59,7 @@ var controller = new Vue({
             var actionUrl = !this.editStatus ? this.actionUrl : this.actionUrl + '/' + id;
             axios.post(actionUrl, new FormData($(event.target)[0])).then(response => {
                 $('#modal-default').modal('hide');
-                _this.table.ajax.reload();
+                this.datatable();
             });
         },
     }

@@ -56,8 +56,27 @@ class BookController extends Controller
             'qty' => 'required',
             'price' => 'required',
         ]);
+        $publisher = Publisher::create([
+            'name' => $request->input('publisher_name'),
+        ]);
+        $author = Author::create([
+            'name' => $request->input('author_name'),
+        ]);
+        $catalog = Catalog::create([
+            'name' => $request->input('catalog_name'),
+        ]);
 
-        Book::create($request->all());
+        // Book::create($request->all());
+        Book::create([
+            'isbn' => $request->input('isbn'),
+            'title' => $request->input('title'),
+            'year' => $request->input('year'),
+            'qty' => $request->input('qty'),
+            'price' => $request->input('price'),
+            'publisher_id' => $publisher->id, 
+            'author_id' => $author->id, 
+            'catalog_id' => $catalog->id,
+        ]);
 
         return redirect('books');
     }

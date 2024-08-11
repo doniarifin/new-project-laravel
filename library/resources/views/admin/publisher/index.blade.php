@@ -32,7 +32,7 @@
               <td> {{ $publisher->email }} </td>
               <td> {{ $publisher->phone_number }} </td>
               <td> {{ $publisher->address }} </td>
-              <td class="text-center"> {{ date('H:i:s - d M Y', strtotime($publisher->created_at)) }} </td>
+              <td class="text-center"> {{ convert_date($publisher->created_at) }} </td>
               <td class="text-center">
                 <a href="{{ url('publishers/'.$publisher->id.'/edit') }}" class="btn btn-sm btn-warning">Edit</a>
 
